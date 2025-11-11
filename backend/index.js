@@ -24,9 +24,9 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", 
-      "https://mini-project-beta-seven.vercel.app", 
+      "https://mini-project-cv7c-a78l35mtk-sahana-bhats-projects.vercel.app", 
     ],
-    credentials: true, 
+    credentials: true,
   })
 );
 
@@ -39,14 +39,12 @@ app.use("/api/v1/message", messageRoute);
 app.use("/api/v1/notifications", notificationRoute);
 app.use("/api/v1/comments", commentRoute);
 
-
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "Backend is running ",
+    message: "Backend is running",
   });
 });
-
 
 app.listen(PORT, () => {
   connectDB();
