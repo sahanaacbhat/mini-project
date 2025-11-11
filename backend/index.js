@@ -24,7 +24,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", 
-      "https://mini-project-cv7c-a78l35mtk-sahana-bhats-projects.vercel.app", 
+      "mini-project-git-main-sahana-bhats-projects.vercel.app", 
     ],
     credentials: true,
   })
