@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/api/v1";
+const API_URL = import.meta.env.VITE_API_URL 
+  ? `https://${import.meta.env.VITE_API_URL}/api/v1`
+  : "http://localhost:8000/api/v1";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -9,6 +11,7 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
 });
+
 
 export const authAPI = {
   register: async (data) => (await api.post("/user/register", data)).data,
@@ -43,7 +46,7 @@ export const postAPI = {
   likePost: async (postId) => (await api.put(`/post/${postId}/like`)).data,
   dislikePost: async (postId) => (await api.put(`/post/${postId}/dislike`)).data,
 
- 
+  
   addComment: async (postId, text) =>
     (await api.post(`/comments/${postId}`, { text })).data,
   getComments: async (postId) =>
@@ -56,12 +59,10 @@ export const postAPI = {
     (await api.get(`/post/${postId}/bookmark`)).data,
 };
 
-
 export const notificationAPI = {
   list: async () => (await api.get("/notifications")).data,
   markAllRead: async () => (await api.put("/notifications/mark-all-read")).data,
 };
-
 
 export const messageAPI = {
   sendMessage: async (receiverId, textMessage) =>
