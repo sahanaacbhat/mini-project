@@ -21,8 +21,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const allowedOrigins = [
+  "http://localhost:5173",
   "http://localhost:5174",
   process.env.FRONTEND_URL,
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
 ].filter(Boolean);
 
 app.use(
@@ -53,14 +55,18 @@ app.use("/api/v1/notifications", notificationRoute);
 
 app.use("/api/v1/comments", commentRoute);
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.status(200).json({
     success: true,
     message: "Backend is running ",
   });
 });
 
+// Connect to database
+connectDB();
+
 app.listen(PORT, () => {
-  connectDB();
   console.log(`Server running on port ${PORT}`);
 });
+
+export default app;
