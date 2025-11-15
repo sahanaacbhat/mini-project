@@ -7,6 +7,11 @@ import { Link } from "react-router-dom";
 
 const ProfileImage = React.memo(({ src, alt }) => {
   const [imgSrc, setImgSrc] = useState(src);
+  
+  useEffect(() => {
+    setImgSrc(src);
+  }, [src]);
+
   if (imgSrc) {
     return (
       <img

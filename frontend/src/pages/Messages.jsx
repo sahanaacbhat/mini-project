@@ -7,6 +7,54 @@ import { Button } from "../components/ui/button";
 import { Send, User, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
+const ProfileImage = ({ userObj, size = 36 }) => {
+  const [imgSrc, setImgSrc] = useState(null);
+
+  useEffect(() => {
+    if (userObj && typeof userObj === "object" && userObj.profilePicture) {
+      setImgSrc(userObj.profilePicture);
+    } else {
+      setImgSrc(null);
+    }
+  }, [userObj]);
+
+  const username = userObj?.username || "User";
+
+  if (imgSrc) {
+    return (
+      <img
+        src={imgSrc}
+        alt={username}
+        className="rounded-full object-cover border border-gray-400"
+        style={{ width: `${size}px`, height: `${size}px`, minWidth: `${size}px`, minHeight: `${size}px` }}
+        onError={() => setImgSrc(null)}
+      />
+    );
+  }
+
+  return (
+    <div
+      className="rounded-full bg-gray-300 flex items-center justify-center border border-gray-400"
+      style={{ width: `${size}px`, height: `${size}px`, minWidth: `${size}px`, minHeight: `${size}px` }}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ width: `${size * 0.55}px`, height: `${size * 0.55}px` }}
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="#6B7280"
+        strokeWidth={2}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M5.121 17.804A8.962 8.962 0 0112 15c2.21 0 4.21.895 5.879 2.365M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+        />
+      </svg>
+    </div>
+  );
+};
+
 const Messages = () => {
   const { user } = useAuth();
   const [suggestedUsers, setSuggestedUsers] = useState([]);
@@ -67,33 +115,6 @@ const Messages = () => {
     }
   };
 
-  const renderProfilePic = (userObj, size = 36) => {
-    let src = null;
-    let username = "User";
-    if (userObj && typeof userObj === "object") {
-      src = userObj.profilePicture || null;
-      username = userObj.username || "User";
-    }
-    return src ? (
-      <img
-        src={src}
-        alt={username}
-        className="rounded-full object-cover"
-        style={{ width: size, height: size }}
-        onError={(e) =>
-          (e.target.src = `https://via.placeholder.com/${size}?text=User`)
-        }
-      />
-    ) : (
-      <div
-        className="rounded-full bg-gray-300 flex items-center justify-center border"
-        style={{ width: size, height: size }}
-      >
-        <User className="text-gray-500" style={{ width: size / 2, height: size / 2 }} />
-      </div>
-    );
-  };
-
   return (
     <div className="container mx-auto px-2 py-0 max-w-full h-[calc(100vh-4rem)]">
       <div className="flex h-full border rounded-lg bg-white">
@@ -114,7 +135,7 @@ const Messages = () => {
                     selectedUser?._id === su._id ? "bg-gray-100" : ""
                   }`}
                 >
-                  {renderProfilePic(su, 36)}
+                  <ProfileImage userObj={su} size={36} />
                   <div className="text-left">
                     <p className="font-semibold text-sm">{su.username}</p>
                     <p className="text-xs text-gray-500">{su.email || "New on Instagram"}</p>
@@ -129,7 +150,7 @@ const Messages = () => {
           {selectedUser ? (
             <>
               <div className="p-4 border-b flex items-center gap-3">
-                {renderProfilePic(selectedUser, 36)}
+                <ProfileImage userObj={selectedUser} size={36} />
                 <div>
                   <p className="font-semibold">{selectedUser.username}</p>
                   <Link
@@ -159,6 +180,9 @@ const Messages = () => {
                     const userIdStr = user?._id?.toString() || user?._id;
                     const isOwnMessage = senderId === userIdStr;
 
+                    // Determine who to show profile pic for
+                    const senderProfile = isOwnMessage ? user : (typeof message.senderId === "object" ? message.senderId : selectedUser);
+
                     return (
                       <div
                         key={message._id}
@@ -166,7 +190,7 @@ const Messages = () => {
                           isOwnMessage ? "justify-end" : "justify-start"
                         }`}
                       >
-                        {!isOwnMessage && renderProfilePic(message.senderId, 32)}
+                        {!isOwnMessage && <ProfileImage userObj={senderProfile} size={32} />}
                         <div
                           className={`max-w-md p-3 break-words rounded-3xl ${
                             isOwnMessage

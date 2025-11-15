@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button";
 const ProfileImage = React.memo(({ src, alt }) => {
   const [imgSrc, setImgSrc] = useState(src);
 
+  useEffect(() => {
+    setImgSrc(src);
+  }, [src]);
+
   if (imgSrc) {
     return (
       <img

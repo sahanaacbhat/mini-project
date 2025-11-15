@@ -9,6 +9,10 @@ import { Settings, Loader2 } from "lucide-react";
 const ProfileImage = ({ src, alt, size = 128 }) => {
   const [imgSrc, setImgSrc] = useState(src);
 
+  useEffect(() => {
+    setImgSrc(src);
+  }, [src]);
+
   if (imgSrc) {
     return (
       <img

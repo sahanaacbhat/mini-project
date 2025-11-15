@@ -16,6 +16,10 @@ import { Link } from 'react-router-dom';
 const ProfileImage = ({ src, alt, size = 40 }) => {
   const [imgSrc, setImgSrc] = useState(src);
 
+  useEffect(() => {
+    setImgSrc(src);
+  }, [src]);
+
   if (imgSrc) {
     return (
       <img
